@@ -139,14 +139,3 @@ public:
 
 };
 
-//end of queue class
-
-template < typename T>
-void PrintQueue(LinkedQueue<T> Q)
-{
-	T K;
-	while (Q.dequeue(K))
-		cout << K << " ";
-	cout << endl;
-}
-
