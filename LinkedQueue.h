@@ -1,3 +1,6 @@
+#include"iostream"
+using namespace std;
+
 template < typename T>
 class Node
 {
@@ -136,6 +139,30 @@ public:
 			NodePtr = NodePtr->getNext();
 		}
 	}
+
+	int getCount() const
+	{
+		int count = 0;
+		Node<T>* current = frontPtr;
+		while (current)
+		{
+			count++;
+			current = current->getNext();
+		}
+		return count;
+	}
+
+	void print_list() const
+	{
+		Node<T>* current = frontPtr;
+		while (current)
+		{
+			cout << current->getItem() << " ";
+			current = current->getNext();
+		}
+		cout <<endl;
+	}
+
 
 };
 
