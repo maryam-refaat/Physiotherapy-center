@@ -1,4 +1,6 @@
 #pragma once
+#include"iostream"
+using namespace std;
 template < typename T>
 class priNode
 {
@@ -96,5 +98,28 @@ public:
     bool isEmpty() const {
         return head == nullptr;
     }
+int getCount() const
+{
+    int count = 0;
+    priNode<T>* current = head;
+    while (current)
+    {
+        count++;
+        current = current->getNext();
+    }
+    return count;
+}
+
+void print_list() const
+{
+    priNode<T>* current = head;
+    while (current)
+    {
+        cout << "[" << current->getPri() << "] " << current->getItem() << "  ";
+        current = current->getNext();
+    }
+    cout << endl;
+}
+
 };
 
