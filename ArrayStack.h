@@ -1,4 +1,6 @@
 #pragma once
+#include"iostream"
+using namespace std;
 # define STACK_SIZE 200
 template<typename T>
 class ArrayStack  //Dont change this
@@ -60,6 +62,21 @@ public:
 			items[i] = S.items[i];
 		top = S.top;
 	}
+
+        int getCount() const
+        {
+	        return top + 1;
+        }
+
+        void print_stack() const
+        {
+	        for (int i = top; i >= 0; i--)
+	{
+		cout << items[i] << " ";
+	}
+	  cout <<endl;
+}
+
 
 }; // end ArrayStack
 
