@@ -5,7 +5,7 @@
 
 class ExerciseTreatment : public Treatment {
 public:
-    ExerciseTreatment(int d) : Treatment(d) {}
+    ExerciseTreatment(TreatmentType t, int d) : Treatment(t,d) {}
 
     bool canAssign(Scheduler& scheduler) const override;
     void moveToWait(Scheduler& scheduler, Patient* patient) override;
