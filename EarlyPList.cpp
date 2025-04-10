@@ -7,56 +7,41 @@ Patient* EarlyPList::reschedule()
     static bool seeded = false;
     if (!seeded) 
     {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
         seeded = true;
     }
 
-    if (isEmpty()) 
+    if (std::rand() % 100 >= Presc || isEmpty()) 
     {
         return nullptr;
     }
 
     int count = 0;
     PriQueue<Patient*> tempQueue;
-    Patient* currentPatient;
-    int currentPri;
+    Patient* p;
+    int pri;
 
-    while (dequeue(currentPatient, currentPri)) 
+    while (dequeue(p, pri)) 
     {
-        tempQueue.enqueue(currentPatient, currentPri);
+        tempQueue.enqueue(p, pri);
         count++;
     }
 
-    while (tempQueue.dequeue(currentPatient, currentPri)) 
-    {
-        enqueue(currentPatient, currentPri);
-    }
-
-    if (count == 0) 
-    {
-        return nullptr;
-    }
-
-    int targetIndex = rand() % count;
-    Patient* rescheduledPatient = nullptr;
+    int targetIndex = std::rand() % count;
     int currentIndex = 0;
+    Patient* rescheduledPatient = nullptr;
 
-    while (dequeue(currentPatient, currentPri)) 
+    while (tempQueue.dequeue(p, pri)) 
     {
         if (currentIndex == targetIndex) 
         {
-            rescheduledPatient = currentPatient;
+            rescheduledPatient = p;
         }
         else 
         {
-            tempQueue.enqueue(currentPatient, currentPri);
+            enqueue(p, pri);
         }
         currentIndex++;
-    }
-
-    while (tempQueue.dequeue(currentPatient, currentPri)) 
-    {
-        enqueue(currentPatient, currentPri);
     }
 
     return rescheduledPatient;
