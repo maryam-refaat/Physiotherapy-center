@@ -5,7 +5,7 @@
 
 class UltrasoundTreatment : public Treatment {
 public:
-    UltrasoundTreatment(int d) : Treatment(d) {}
+    UltrasoundTreatment(TreatmentType t, int d) : Treatment(t,d) {}
 
     bool canAssign(Scheduler& scheduler) const;
     void moveToWait(Scheduler& scheduler, Patient* patient);
