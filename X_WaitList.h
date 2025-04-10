@@ -3,7 +3,9 @@
 
 class X_WaitList : public EU_WaitList 
 {
+    int Pcancel; // Cancellation probability (0-100)
 public:
+    X_WaitList(int cancelProb) : Pcancel(cancelProb) {}
     Patient* cancel();
 };
 
