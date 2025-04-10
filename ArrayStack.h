@@ -3,7 +3,7 @@
 template<typename T>
 class ArrayStack  //Dont change this
 {
-private:
+protected:
 	T items[STACK_SIZE];		// Array of stack items
 	int      top;                   // Index to top of stack
 
