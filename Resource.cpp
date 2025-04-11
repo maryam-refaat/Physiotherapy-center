@@ -1,5 +1,8 @@
 #include "Resource.h"
 
-Resource::Resource(int i, TreatmentType t) : id(i), type(t) 
+Resource::Resource(TreatmentType t,int c=1) :  type(t), id(next_id++), capacity(c)
 {
+}
+int Resource::get_id(){
+    return id;
 }
