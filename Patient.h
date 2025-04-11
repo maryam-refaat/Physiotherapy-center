@@ -24,7 +24,10 @@ protected:
     public:
         Patient(int id, PatientType t, int appointmentTime, int arrivalTime,
             LinkedQueue<Treatment*>& treatments);
-    
+
+
+        void setPT(int newPT);
+
         int getPID() const { return PID; }
         PatientType getType() const { return type; }
         int getPT() const { return PT; }

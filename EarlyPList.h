@@ -6,10 +6,19 @@
 class EarlyPList : public PriQueue<Patient*> 
 {
     int Presc; // Rescheduling probability (0-100)
+    int EarlyNumber;
+    int ResceduleNumber;
 public:
-    EarlyPList(int rescheduleProb) : Presc(rescheduleProb) {}
+    EarlyPList(int rescheduleProb) : Presc(rescheduleProb),EarlyNumber(0),ResceduleNumber(0) {}
 
     Patient* reschedule();
+
+    void enqueue(const T& data, int priority);
+    
+    flaot getReschedulePercent(int &LateNumber);
+    flaot getEarlyPercent(int &LateNumber);
+
+    int GetEarlyNumber();
 };
 
 

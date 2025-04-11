@@ -23,6 +23,13 @@ Patient::Patient(int id, PatientType patientType, int appointmentTime, int arriv
 }
 
 
+
+void Patient::setPT(int newPT)
+{
+    PT = newPT;
+}
+
+
 void Patient::optimizeTreatmentOrder() 
 {
     if (requiredTreatments.getCount() <= 1) return;
