@@ -17,7 +17,7 @@ Patient* X_WaitList::cancel()
     {
         return nullptr;
     }
-
+    CancelNumber++;
     LinkedQueue<Patient*> eligiblePatients;
     LinkedQueue<Patient*> tempQueue;
     Patient* current;
@@ -63,4 +63,9 @@ Patient* X_WaitList::cancel()
     }
 
     return cancelledPatient;
+}
+
+flaot X_WaitList::getCancellationPercent(int &EarlyNumber,int &LateNumber)
+{
+    return ((flaot)CancelNumber*100)/(EarlyNumber + LateNumber);
 }
