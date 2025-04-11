@@ -54,9 +54,10 @@ private:
 
 	Node<T>* backPtr;
 	Node<T>* frontPtr;
+	int Counter;
 public:
 
-	LinkedQueue()
+	LinkedQueue():Counter(0)
 	{
 		backPtr = nullptr;
 		frontPtr = nullptr;
@@ -70,6 +71,7 @@ public:
 
 	bool enqueue(const T& newEntry)
 	{
+		Counter++;
 		Node<T>* newNodePtr = new Node<T>(newEntry);
 		// Insert the new node
 		if (isEmpty())	//special case if this is the first node to insert
@@ -85,7 +87,7 @@ public:
 	{
 		if (isEmpty())
 			return false;
-
+		Counter--;
 		Node<T>* nodeToDeletePtr = frontPtr;
 		frntEntry = frontPtr->getItem();
 		frontPtr = frontPtr->getNext();
@@ -142,14 +144,15 @@ public:
 
 	int getCount() const
 	{
-		int count = 0;
-		Node<T>* current = frontPtr;
-		while (current)
-		{
-			count++;
-			current = current->getNext();
-		}
-		return count;
+		return Counter;
+		// int count = 0;
+		// Node<T>* current = frontPtr;
+		// while (current)
+		// {
+		// 	count++;
+		// 	current = current->getNext();
+		// }
+		// return count;
 	}
 
 	void print_list() const
