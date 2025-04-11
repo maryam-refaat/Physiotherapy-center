@@ -43,15 +43,28 @@ Patient* EarlyPList::reschedule()
         }
         currentIndex++;
     }
-    int offset = rand() % 10 + 1;
-    int direction = rand() % 2;
-
-    int newPT = (direction == 0) ? (rescheduledPatient->getPT() + offset) : (rescheduledPatient->getPT() - offset);
-    if (newPT > rescheduledPatient->getPT())
-    {
-        rescheduledPatient->setPT(newPT);
-        return rescheduledPatient;
-    }
-    else
-        return nullptr;
+    ResceduleNumber++;
+    return rescheduledPatient;
 }
+
+void EarlyPList:: enqueue(const T& data, int priority)
+{
+        EarlyNumber++;
+        PriQueue::enqueue(const T& data, int priority);
+}
+
+flaot EarlyPList:: getReschedulePercent(int &LateNumber)
+{
+    return ((flaot)ResceduleNumber*100)/(EarlyNumber + LateNumber);
+}
+
+flaot EarlyPList::getEarlyPercent(int &LateNumber)
+{
+    return ((flaot)EarlyNumber*100)/(EarlyNumber + LateNumber);
+}
+
+int EarlyPList::GetEarlyNumber()
+{
+    return EarlyNumber;
+}
+
