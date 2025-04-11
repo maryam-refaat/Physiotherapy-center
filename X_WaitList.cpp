@@ -17,35 +17,42 @@ Patient* X_WaitList::cancel()
     {
         return nullptr;
     }
-    CancelNumber++;
-    LinkedQueue<Patient*> eligiblePatients;
-    LinkedQueue<Patient*> tempQueue;
+
+    
+    // LinkedQueue<Patient*> eligiblePatients;
+    // LinkedQueue<Patient*> tempQueue;
     Patient* current;
 
-    while (dequeue(current)) 
+    int count=getCount();
+    int EligiblePatients_Count=0;
+    while (dequeue(current) && count-- ) 
     {
         if (current->isLastTreatmentXTherapy()) 
         {
-            eligiblePatients.enqueue(current);
+            // eligiblePatients.enqueue(current);
+            EligiblePatients_Count++;
         }
-        tempQueue.enqueue(current);
-    }
-
-    while (tempQueue.dequeue(current)) 
-    {
         enqueue(current);
     }
 
-    if (eligiblePatients.isEmpty()) 
+    // while (tempQueue.dequeue(current)) 
+    // {
+    //     enqueue(current);
+    // }
+
+    if (!EligiblePatients_Count) 
     {
         return nullptr;
     }
 
-   int targetIndex = std::rand() % eligiblePatients.getCount();
+    CancelNumber++;
+
+    int targetIndex = std::rand() % EligiblePatients_Count;
     Patient* cancelledPatient = nullptr;
     int currentIndex = 0;
+    count=getCount();
 
-    while (dequeue(current)) 
+    while (dequeue(current) && count--) 
     {
         if (current->isLastTreatmentXTherapy() && currentIndex++ == targetIndex) 
         {
@@ -53,14 +60,14 @@ Patient* X_WaitList::cancel()
         }
         else 
         {
-            tempQueue.enqueue(current);
+            enqueue(current);
         }
     }
 
-    while (tempQueue.dequeue(current)) 
-    {
-        enqueue(current);
-    }
+    // while (tempQueue.dequeue(current)) 
+    // {
+    //     enqueue(current);
+    // }
 
     return cancelledPatient;
 }
