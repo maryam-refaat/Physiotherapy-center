@@ -44,6 +44,8 @@ Patient* EarlyPList::reschedule()
         currentIndex++;
     }
     ResceduleNumber++;
+    
+    rescheduledPatient->setPT(rescheduledPatient->getPT() + rand() % rescheduledPatient->getPT());
     return rescheduledPatient;
 }
 
