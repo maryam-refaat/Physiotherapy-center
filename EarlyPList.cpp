@@ -43,6 +43,15 @@ Patient* EarlyPList::reschedule()
         }
         currentIndex++;
     }
+    int offset = rand() % 10 + 1;
+    int direction = rand() % 2;
 
-    return rescheduledPatient;
+    int newPT = (direction == 0) ? (rescheduledPatient->getPT() + offset) : (rescheduledPatient->getPT() - offset);
+    if (newPT > rescheduledPatient->getPT())
+    {
+        rescheduledPatient->setPT(newPT);
+        return rescheduledPatient;
+    }
+    else
+        return nullptr;
 }
