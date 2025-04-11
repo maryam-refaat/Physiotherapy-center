@@ -3,7 +3,7 @@
 #include <ctime>   // For time()
 
 
-#include "X_WaitList.h"
+// #include "X_WaitList.h"
 
 Patient* X_WaitList::cancel() 
 {
