@@ -10,6 +10,6 @@ public:
 
     Patient* cancel();
 
-    flaot getCancellationPercent();
+      float getCancellationPercent(int& EarlyNumber, int& LateNumber);
 };
 
