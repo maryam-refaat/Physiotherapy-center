@@ -1,7 +1,7 @@
 #include "EarlyPList.h"
 #include <cstdlib>
 #include <ctime>
-
+//comm
 Patient* EarlyPList::reschedule() 
 {
     static bool seeded = false;
