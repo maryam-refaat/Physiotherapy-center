@@ -130,7 +130,7 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
             }
         }
     }
-    delete[] gymCapacities;
+    //delete[] gymCapacities;
             
             /*if(treatTypeChar == 'E')
                 treatments.enqueue(new ElectroTreatment(duration));
