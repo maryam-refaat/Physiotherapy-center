@@ -4,6 +4,8 @@
 #include <cstdlib> // For rand()
 #include <ctime>   // For seeding rand()
 #include <cctype>
+#include"iostream"
+using namespace std;
 
 Scheduler::Scheduler() {
     srand(time(nullptr)); // Seed for random events like cancel/reschedule
@@ -23,7 +25,7 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
     InitializeResources(NE, NU, NG, gymCapacities);
 
     int Pcancel, Presc;
-    file >> Pcancel >> Presc; // Store these in member variables if needed
+    file >> Pcancel >> Presc;
 
     int Patients;
     file >> Patients;
@@ -33,28 +35,117 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
         int PT, VT, NT;
         file >> typeChar >> PT >> VT >> NT;
 
+        // Validate number of treatments
+        if (NT > 3) 
+        {
+            //cout << "Patient " << (i + 1) << ": Too many treatments (" << NT << "). Max is 3. Skipping." << endl;
+            // Skip this patient's treatment data
+            for (int j = 0; j < NT; ++j) 
+            {
+                char dummyType;
+                int dummyDur;
+                file >> dummyType >> dummyDur;
+            }
+            continue;
+        }
+
         PatientType type = (typeChar == 'N') ? PatientType::NORMAL : PatientType::RECOVERING;
 
         LinkedQueue<Treatment*> treatments;
-        for (int j = 0; j < NT; ++j) {
+
+        bool hasElectro = false, hasUltrasound = false, hasExercise = false;
+        bool valid = true;
+
+        for (int j = 0; j < NT; ++j) 
+        {
             char treatTypeChar;
             int duration;
             file >> treatTypeChar >> duration;
             treatTypeChar=toupper(treatTypeChar);
 
-            TreatmentType tType = (treatTypeChar == 'E') ? TreatmentType::E :
-                                  (treatTypeChar == 'U') ? TreatmentType::U : TreatmentType::X;
-            if(treatTypeChar == 'E')
+            TreatmentType tType = (treatTypeChar == 'E') ? TreatmentType::ELECTRO :
+                                  (treatTypeChar == 'U') ? TreatmentType::ULTRASOUND : TreatmentType::EXERCISE;
+            
+            // Check for duplicate treatment types
+            if (treatTypeChar == 'E' && hasElectro) {
+                cerr << "Patient " << (i + 1) << ": Duplicate Electro therapy. Skipping." << endl;
+                valid = false;
+                break;
+            }
+            if (treatTypeChar == 'U' && hasUltrasound) {
+                cerr << "Patient " << (i + 1) << ": Duplicate Ultrasound therapy. Skipping." << endl;
+                valid = false;
+                break;
+            }
+            if (treatTypeChar == 'X' && hasExercise) {
+                cerr << "Patient " << (i + 1) << ": Duplicate Exercise therapy. Skipping." << endl;
+                valid = false;
+                break;
+            }
+
+            // Create appropriate treatment
+            Treatment* newTreatment = nullptr;
+            switch (treatTypeChar) 
+            {
+            case 'E':
+                newTreatment = new ElectroTreatment(duration);
+                hasElectro = true;
+                break;
+            case 'U':
+                newTreatment = new UltrasoundTreatment(duration);
+                hasUltrasound = true;
+                break;
+            case 'X':
+                newTreatment = new ExerciseTreatment(duration);
+                hasExercise = true;
+                break;
+            default:
+                //cout << "Patient " << (i + 1) << ": Invalid treatment type "<< treatTypeChar << ". Skipping." << endl;
+                valid = false;
+            }
+
+            if (!valid) break;
+            treatments.enqueue(newTreatment);
+        }
+
+        if (valid) 
+        {
+            Patient* newPatient = new Patient(i + 1, type, PT, VT, treatments);
+            ALLPatients.enqueue(newPatient);
+        }
+        else 
+        {
+            // Clean up any treatments we created before the error
+            Treatment* t;
+            while (treatments.dequeue(t)) 
+            {
+                delete t;
+            }
+            // Skip remaining treatments if we aborted early
+            for (int j = treatments.getCount(); j < NT; ++j) 
+            {
+                char dummyType;
+                int dummyDur;
+                file >> dummyType >> dummyDur;
+            }
+        }
+    }
+    delete[] gymCapacities;
+            
+            /*if(treatTypeChar == 'E')
                 treatments.enqueue(new ElectroTreatment(duration));
             else if(treatTypeChar == 'U')
                 treatments.enqueue(new UltrasoundTreatment(duration));
             else
-                treatments.enqueue(new ExerciseTreatment(duration));
-        }
+                treatments.enqueue(new ExerciseTreatment(duration));*/
 
-        Patient* newPatient = new Patient(i + 1, type, PT, VT, treatments);
-        ALLPatients.enqueue(newPatient);
-    }
+
+        //}
+
+
+       // Patient* newPatient = new Patient(i + 1, type, PT, VT, treatments);
+       //ALLPatients.enqueue(newPatient);
+  //  }
 }
 
 void Scheduler::InitializeResources(int NE, int NU, int NG, const int *gymCapacities ) {
