@@ -8,7 +8,10 @@ class X_WaitList : public EU_WaitList
 public:
     X_WaitList(int cancelProb) : Pcancel(cancelProb),CancelNumber(0) {}
 
-    Patient* cancel();
+    //Patient* cancel();
+
+      bool cancel(Patient* &pcancelled);
+
 
       float getCancellationPercent(int& EarlyNumber, int& LateNumber);
 };
