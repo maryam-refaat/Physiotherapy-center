@@ -52,4 +52,14 @@ public:
     int getLatency(Treatment* t)const ;
     // Utilities
     void PrintStatistics();
+
+//treatments checks
+bool hasAvailableUltrasoundDevice();
+void addToUWait(Patient* patient);
+
+bool hasAvailableExerciseRoom();
+void addToXWait(Patient* patient);
+
+bool hasAvailableElectroDevice();
+void addToEWait(Patient* patient);
 };
