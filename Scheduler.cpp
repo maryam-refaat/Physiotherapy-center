@@ -68,20 +68,20 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
             
             // Check for duplicate treatment types
             if (treatTypeChar == 'E' && hasElectro) {
-                cerr << "Patient " << (i + 1) << ": Duplicate Electro therapy. Skipping." << endl;
-                valid = false;
-                break;
+            //cout << "Patient " << (i + 1) << ": Duplicate Electro therapy. Skipping." << endl;
+            valid = false;
+            break;
             }
-            if (treatTypeChar == 'U' && hasUltrasound) {
-                cerr << "Patient " << (i + 1) << ": Duplicate Ultrasound therapy. Skipping." << endl;
-                valid = false;
-                break;
-            }
-            if (treatTypeChar == 'X' && hasExercise) {
-                cerr << "Patient " << (i + 1) << ": Duplicate Exercise therapy. Skipping." << endl;
-                valid = false;
-                break;
-            }
+           if (treatTypeChar == 'U' && hasUltrasound) {
+           //cout << "Patient " << (i + 1) << ": Duplicate Ultrasound therapy. Skipping." << endl;
+           valid = false;
+           break;
+           }
+          if (treatTypeChar == 'X' && hasExercise) {
+           //cout << "Patient " << (i + 1) << ": Duplicate Exercise therapy. Skipping." << endl;
+           valid = false;
+          break;
+           }
 
             // Create appropriate treatment
             Treatment* newTreatment = nullptr;
