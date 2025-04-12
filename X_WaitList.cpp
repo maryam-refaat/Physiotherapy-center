@@ -5,7 +5,7 @@
 
 // #include "X_WaitList.h"
 
-Patient* X_WaitList::cancel() 
+bool X_WaitList::cancel(Patient* &pcancelled)
 {
     static bool seeded = false;
     if (!seeded) {
@@ -15,7 +15,8 @@ Patient* X_WaitList::cancel()
 
     if (std::rand() % 100 >= Pcancel || isEmpty()) 
     {
-        return nullptr;
+        pcancelled = nullptr;
+        return false;
     }
 
     
@@ -42,7 +43,8 @@ Patient* X_WaitList::cancel()
 
     if (!EligiblePatients_Count) 
     {
-        return nullptr;
+        pcancelled = nullptr;
+        return false;
     }
 
     CancelNumber++;
@@ -56,7 +58,7 @@ Patient* X_WaitList::cancel()
     {
         if (current->isLastTreatmentXTherapy() && currentIndex++ == targetIndex) 
         {
-            cancelledPatient = current;
+            pcancelled = current;
         }
         else 
         {
@@ -69,7 +71,7 @@ Patient* X_WaitList::cancel()
     //     enqueue(current);
     // }
 
-    return cancelledPatient;
+    return true;
 }
 
 float X_WaitList::getCancellationPercent(int &EarlyNumber,int &LateNumber)
