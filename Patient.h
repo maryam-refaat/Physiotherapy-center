@@ -1,6 +1,6 @@
 #ifndef PATIENT_H
 #define PATIENT_H
-
+#include"Scheduler.h"
 #include "LinkedQueue.h"
 #include "Treatment.h"
 
@@ -27,6 +27,8 @@ protected:
 
 
         void setPT(int newPT);
+        void setState(PatientStatus p);
+
         PatientType getType(){return type;}
         int getPID() const { return PID; }
         PatientType getType() const { return type; }
@@ -41,7 +43,7 @@ protected:
         bool isIdle() const { return status == PatientStatus::IDLE; }
         bool isEarly() const { return status == PatientStatus::ERLV; }
         bool isLate() const { return status == PatientStatus::LATE; }
-        bool isWaiting() const { return status == PatientStatus::WATI; }
+        bool isWaiting() const { return status == PatientStatus::WAIT; }
         bool inTreatment() const { return status == PatientStatus::SERV; }
         bool isFinished() const { return status == PatientStatus::FNSH; }
     
@@ -60,7 +62,7 @@ protected:
         void calculateLatePenalty();
         // bool FinishedTreatments();
 
-        int getTreatmentListSize(){return requiredTreatments->getCount();}
+        int getTreatmentListSize() { return requiredTreatments.getCount(); }
         // Treatment* GetTreatment_With_LeastLatency() const;
         Treatment* LeastWaiting(int Elatency,int Ulatency, int Xlatency)const;
 
@@ -83,3 +85,4 @@ protected:
 //    int getCurrentTreatmentDuration() const;
 //
 //};
+
