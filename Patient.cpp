@@ -156,7 +156,11 @@ void Patient::calculateLatePenalty()
 
 
 
-
+ostream& operator<<(ostream& os, const Patient& patient)
+{
+    os << "P" << patient.getPID() << "_" << patient.getVT() << " ,";
+    return os;
+}
 
 // Treatment* Patient:: GetTreatment_With_LeastLatency() const
 // {
