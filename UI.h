@@ -8,7 +8,7 @@
 #include "EarlyPList.h"
 #include "EU_WaitList.h"
 #include "Patient.h"
-using namespacestd;
+using namespace std;
 
 
 class UI {
