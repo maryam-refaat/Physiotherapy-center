@@ -210,7 +210,7 @@ void Scheduler::AssignTreatments(int currentTime) {
         ALLPatients.dequeue(TempPatient);
         PatientType patientType=TempPatient->getType();
         if(patientType== PatientType::RECOVERING)
-             TempPatient->optimizeTreatmentOrder();
+             TempPatient->optimizeTreatmentOrder(*this);
         
         Treatment* t=TempPatient->getCurrentTreatment();
             if(t->canAssign(*this))
@@ -249,7 +249,7 @@ int Scheduler:: getLatency(Treatment* t) const
         }
     else
         {  
-            return X_Waiting.calcTreatmentLatency()
+        return X_Waiting.calcTreatmentLatency();
         }
 }
 
