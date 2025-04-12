@@ -7,6 +7,8 @@ protected:
     static int next_id;
     int id;
     TreatmentType type;
+    int capacity;
 public:
     Resource(TreatmentType t,int c=1);
+    int get_id();
 };
