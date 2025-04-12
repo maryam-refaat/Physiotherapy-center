@@ -285,3 +285,34 @@ void Scheduler::MoveToFinished(Patient* p) {
 void Scheduler::PrintStatistics() {
     // Output relevant stats here: number of patients, avg wait/treatment times, etc.
 }
+bool Scheduler::hasAvailableUltrasoundDevice()
+{
+    return !U_Devices.isEmpty();
+}
+
+void Scheduler::addToUWait(Patient* patient)
+{
+    patient->setState(PatientStatus::WAIT);
+    U_Waiting.insertSorted(patient);
+}
+
+bool Scheduler::hasAvailableExerciseRoom()
+{
+    return !X_Rooms.isEmpty();
+}
+void Scheduler::addToXWait(Patient* patient)
+{
+    patient->setState(PatientStatus::WAIT);
+    X_Waiting.insertSorted(patient);
+}
+
+bool Scheduler::hasAvailableElectroDevice()
+{
+    return !E_Waiting.isEmpty();
+}
+
+void Scheduler::addToEWait(Patient* patient)
+{
+    patient->setState(PatientStatus::WAIT);
+    E_Waiting.insertSorted(patient);
+}
