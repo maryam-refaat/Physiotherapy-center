@@ -34,3 +34,8 @@ void Treatment::unassign()
     assignedResource = nullptr;
     assignmentTime = -1;
 }
+
+TreatmentType Treatment::getTreatmentType()
+{
+    
+}
