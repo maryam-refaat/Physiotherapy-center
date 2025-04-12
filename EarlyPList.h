@@ -2,7 +2,7 @@
 
 #include "PriQueue.h"
 #include "Patient.h"
-
+class Patient;
 class EarlyPList : public PriQueue<Patient*> 
 {
     int Presc; // Rescheduling probability (0-100)
