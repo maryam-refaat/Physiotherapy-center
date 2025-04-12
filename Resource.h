@@ -4,9 +4,9 @@ enum class TreatmentType { ELECTRO, ULTRASOUND, EXERCISE };
 
 class Resource {
 protected:
+    static int next_id;
     int id;
     TreatmentType type;
 public:
-    Resource(int i, TreatmentType t);
+    Resource(TreatmentType t,int c=1);
 };
-
