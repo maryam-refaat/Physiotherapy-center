@@ -15,8 +15,8 @@ public:
 
     void enqueue(const T& data, int priority);
     
-    flaot getReschedulePercent(int &LateNumber);
-    flaot getEarlyPercent(int &LateNumber);
+    float getReschedulePercent(int &LateNumber);
+    float getEarlyPercent(int &LateNumber);
 
     int GetEarlyNumber();
 };
