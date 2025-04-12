@@ -72,7 +72,7 @@ Patient* X_WaitList::cancel()
     return cancelledPatient;
 }
 
-flaot X_WaitList::getCancellationPercent(int &EarlyNumber,int &LateNumber)
+float X_WaitList::getCancellationPercent(int &EarlyNumber,int &LateNumber)
 {
-    return ((flaot)CancelNumber*100)/(EarlyNumber + LateNumber);
+    return ((float)CancelNumber*100)/(EarlyNumber + LateNumber);
 }
