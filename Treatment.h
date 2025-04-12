@@ -22,5 +22,8 @@ public:
     Resource* getAssignedResource() const;
     void assign(Resource* resource, int time);
     void unassign();
+
+    TreatmentType getTreatmentType();
 };
+
 
