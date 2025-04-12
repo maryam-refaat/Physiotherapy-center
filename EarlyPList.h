@@ -13,7 +13,7 @@ public:
 
     Patient* reschedule();
 
-    void enqueue(const T& data, int priority);
+    void enqueue(Patient* &data, int priority);
     
     float getReschedulePercent(int &LateNumber);
     float getEarlyPercent(int &LateNumber);
