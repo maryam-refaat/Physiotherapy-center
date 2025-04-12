@@ -7,7 +7,7 @@
 #include "X_WaitList.h"
 #include "patient.h"
 #include "Resource.h"
-#include "vector"
+
 using namespace std;
 
 class Scheduler {
