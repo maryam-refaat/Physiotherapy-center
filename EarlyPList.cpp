@@ -18,8 +18,8 @@ Patient* EarlyPList::reschedule()
 
     
     // PriQueue<Patient*> tempQueue;
-    // Patient* p;
-    // int pri;
+    Patient* p;
+    int pri;
 
     // while (dequeue(p, pri)) 
     // {
@@ -50,10 +50,10 @@ Patient* EarlyPList::reschedule()
     return rescheduledPatient;
 }
 
-void EarlyPList:: enqueue(const T& data, int priority)
+void EarlyPList:: enqueue(Patient* &data, int priority)
 {
         EarlyNumber++;
-        PriQueue::enqueue(const T& data, int priority);
+        PriQueue::enqueue(data,priority);
 }
 
 float EarlyPList:: getReschedulePercent(int &LateNumber)
