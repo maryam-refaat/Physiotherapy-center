@@ -30,21 +30,24 @@ void Patient::setPT(int newPT)
 }
 
 
-void Patient::optimizeTreatmentOrder() 
+void Patient::optimizeTreatmentOrder(Scheduler& scheduler) 
 {
     if (requiredTreatments.getCount() <= 1) return;
 
     // Find treatment with minimum duration (for recovering patients)
     LinkedQueue<Treatment*> tempQueue;
     Treatment* minTreatment = nullptr;
-    int minDuration = INT_MAX;
-    Treatment* t;
+    // int minDuration = INT_MAX;
+    int minLatency = INT_MAX;
+    Treatment* t=NULL;
 
     while (requiredTreatments.dequeue(t)) 
     {
-        if (t->getDuration() < minDuration) 
+        // if (t->getDuration() < minDuration) 
+        int latency=scheduler.getLatency(t);
+        if (latency < minLatency) 
         {
-            minDuration = t->getDuration();
+            minLatency = latency;
             if (minTreatment) tempQueue.enqueue(minTreatment);
             minTreatment = t;
         }
@@ -117,7 +120,7 @@ bool Patient::completeTreatment()
 
 void Patient::moveToNextTreatment() 
 {
-    status = PatientStatus::WATI;
+    status = PatientStatus::WAIT;
 }
 
 void Patient::updateStatus(int currentTime) 
@@ -139,7 +142,7 @@ void Patient::updateStatus(int currentTime)
     }
     else 
     {
-        status = PatientStatus::WATI;
+        status = PatientStatus::WAIT;
     }
 }
 
@@ -150,3 +153,36 @@ void Patient::calculateLatePenalty()
         latePenalty = (VT - PT) / 2;
     }
 }
+
+
+
+
+
+// Treatment* Patient:: GetTreatment_With_LeastLatency() const
+// {
+//     int leastLatency=INT_MAX;
+//     Treatment* t=NULL;
+//     int ListSize=getTreatmentListSize();
+
+//     while(requiredTreatments.dequeue(t) && ListSize--)
+//     {
+//         if(dynamic_cast<UltrasoundTreatment*>(t))
+//             {  
+                
+//             }
+//         else if(dynamic_cast<ElectroTreatment*>(t))
+//             {  
+                
+//             }
+//         else
+//             {  
+                
+//             }
+//     }
+
+// }
+
+// bool patient::FinishedTreatments()
+// {
+//     return requiredTreatments.isEmpty();
+// }

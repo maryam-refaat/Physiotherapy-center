@@ -49,6 +49,7 @@ public:
     void UpdateInTreatment(int currentTime);
     void MoveToFinished(Patient* p);
 
+    int getLatency(Treatment* t)const ;
     // Utilities
     void PrintStatistics();
 };

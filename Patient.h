@@ -7,7 +7,7 @@
 class Treatment;
 
 enum class PatientType { NORMAL, RECOVERING };
-enum class PatientStatus { IDLE, ERLV, LATE, WATI, SERV, FNSH };
+enum class PatientStatus { IDLE, ERLV, LATE, WAIT, SERV, FNSH };
 
 class Patient {
 protected:
@@ -27,7 +27,7 @@ protected:
 
 
         void setPT(int newPT);
-
+        PatientType getType(){return type;}
         int getPID() const { return PID; }
         PatientType getType() const { return type; }
         int getPT() const { return PT; }
@@ -45,7 +45,7 @@ protected:
         bool inTreatment() const { return status == PatientStatus::SERV; }
         bool isFinished() const { return status == PatientStatus::FNSH; }
     
-       Treatment* getCurrentTreatment() const;
+        Treatment* getCurrentTreatment() const;
         TreatmentType getCurrentTreatmentType() const;
         bool hasMoreTreatments() const;
         bool isLastTreatmentXTherapy() const;
@@ -54,10 +54,16 @@ protected:
         void moveToNextTreatment();
     
        // Special functions for recovering patients
-        void optimizeTreatmentOrder();
+        void optimizeTreatmentOrder(Scheduler& scheduler);
     
         void updateStatus(int currentTime);
         void calculateLatePenalty();
+        // bool FinishedTreatments();
+
+        int getTreatmentListSize(){return requiredTreatments->getCount();}
+        // Treatment* GetTreatment_With_LeastLatency() const;
+        Treatment* LeastWaiting(int Elatency,int Ulatency, int Xlatency)const;
+
 };
 
 #endif

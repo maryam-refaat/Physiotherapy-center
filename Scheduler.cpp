@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstdlib> // For rand()
 #include <ctime>   // For seeding rand()
+#include <cctype>
 
 Scheduler::Scheduler() {
     srand(time(nullptr)); // Seed for random events like cancel/reschedule
@@ -21,13 +22,13 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
 
     InitializeResources(NE, NU, NG, gymCapacities);
 
-    int Peancel, Presc;
-    file >> Peancel >> Presc; // Store these in member variables if needed
+    int Pcancel, Presc;
+    file >> Pcancel >> Presc; // Store these in member variables if needed
 
-    int P;
-    file >> P;
+    int Patients;
+    file >> Patients;
     
-    for (int i = 0; i < P; ++i) {
+    for (int i = 0; i < Patients; ++i) {
         char typeChar;
         int PT, VT, NT;
         file >> typeChar >> PT >> VT >> NT;
@@ -39,9 +40,16 @@ void Scheduler::LoadPatientsFromFile(string fileName) {
             char treatTypeChar;
             int duration;
             file >> treatTypeChar >> duration;
+            treatTypeChar=toupper(treatTypeChar);
+
             TreatmentType tType = (treatTypeChar == 'E') ? TreatmentType::E :
                                   (treatTypeChar == 'U') ? TreatmentType::U : TreatmentType::X;
-            treatments.enqueue(new Treatment(duration));
+            if(treatTypeChar == 'E')
+                treatments.enqueue(new ElectroTreatment(duration));
+            else if(treatTypeChar == 'U')
+                treatments.enqueue(new UltrasoundTreatment(duration));
+            else
+                treatments.enqueue(new ExerciseTreatment(duration));
         }
 
         Patient* newPatient = new Patient(i + 1, type, PT, VT, treatments);
@@ -86,7 +94,7 @@ void Scheduler::HandleArrivals(int currentTime) {
             EarlyPatients.enqueue(p,- (p->getPT()));
         } else if (p->getVT() > p->getPT()) {
             p->calculateLatePenalty();
-            int prio=-(p->getLatePenalty()+p->getVT()); //get priority
+            int prio= -(p->getLatePenalty()+p->getVT()); //get priority
             LatePatients.enqueue(p,prio);
         } else {
             p->updateStatus(currentTime); // Becomes WAIT
@@ -103,7 +111,57 @@ void Scheduler::AssignTreatments(int currentTime) {
     // For brevity, implement assignment to resources one by one
     // Example: Assign from E_Waiting to E_Devices if any device is free
     // Similar logic would be done for U and X
+    int size = ALLPatients.getCount();
+    
+    for(int i=0; i<size; i++)
+    {
+        Patient* TempPatient;
+        ALLPatients.dequeue(TempPatient);
+        PatientType patientType=TempPatient->getType();
+        if(patientType== PatientType::RECOVERING)
+             TempPatient->optimizeTreatmentOrder();
+        
+        Treatment* t=TempPatient->getCurrentTreatment();
+            if(t->canAssign(*this))
+            {
+                Resource* ToAssign;
+                if(dynamic_cast<UltrasoundTreatment*>(t))
+                {  
+                    U_Devices.dequeue(ToAssign);
+                    t->assign(ToAssign,t->getDuration());
+                }
+                else if(dynamic_cast<ElectroTreatment*>(t))
+                {  
+                    E_Devices.dequeue(ToAssign);
+                    t->assign(ToAssign,t->getDuration());
+                }
+                else
+                {  
+                    X_Rooms.dequeue(ToAssign);
+                    t->assign(ToAssign,t->getDuration());
+                }
+            }
+            else
+                t->moveToWait(*this,TempPatient);
+    }
 }
+
+int Scheduler:: getLatency(Treatment* t)
+{
+    if(dynamic_cast<UltrasoundTreatment*>(t))
+        {  
+            return U_Waiting.calcTreatmentLatency();
+        }
+    else if(dynamic_cast<ElectroTreatment*>(t))
+        {  
+            return E_Waiting.calcTreatmentLatency();
+        }
+    else
+        {  
+            return X_Waiting.calcTreatmentLatency()
+        }
+}
+
 
 void Scheduler::UpdateInTreatment(int currentTime) {
     int size = InTreatment.getCount();
@@ -112,9 +170,10 @@ void Scheduler::UpdateInTreatment(int currentTime) {
         int pri;
         InTreatment.dequeue(p,pri);
         if (currentTime - p->getTreatmentStartTime() >= p->getCurrentTreatmentDuration()) {
-            if (p->completeTreatment()) {
-                MoveToFinished(p);
-            } else {
+            if (p->completeTreatment()) 
+                if(!p->hasMoreTreatments())
+                    MoveToFinished(p);
+             else {
                 switch (p->getCurrentTreatmentType()) {
                     case TreatmentType::ELECTRO: E_Waiting.insertSorted(p); break;
                     case TreatmentType::ULTRASOUND: U_Waiting.insertSorted(p); break;
