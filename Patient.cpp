@@ -14,12 +14,13 @@ Patient::Patient(int id, PatientType patientType, int appointmentTime, int arriv
     {
         requiredTreatments.enqueue(treatment);
     }
-
+    /*
     if (type == PatientType::RECOVERING) 
     {
         optimizeTreatmentOrder();
     }
     updateStatus(0);
+   */
 }
 
 void Patient::setState(PatientStatus p)
