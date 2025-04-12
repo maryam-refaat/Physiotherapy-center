@@ -2,7 +2,7 @@
 
 #include "Resource.h"
 #include "Patient.h"
-#include"Scheduler"
+#include"Scheduler.h"
 
 class Treatment {
 protected:
