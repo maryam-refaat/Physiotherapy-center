@@ -64,6 +64,7 @@ protected:
         // Treatment* GetTreatment_With_LeastLatency() const;
         Treatment* LeastWaiting(int Elatency,int Ulatency, int Xlatency)const;
 
+        friend ostream& operator<<(ostream& os, const Patient& patient);
 };
 
 #endif
