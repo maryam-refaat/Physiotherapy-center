@@ -58,12 +58,12 @@ void EarlyPList:: enqueue(const T& data, int priority)
 
 float EarlyPList:: getReschedulePercent(int &LateNumber)
 {
-    return ((flaot)ResceduleNumber*100)/(EarlyNumber + LateNumber);
+    return ((float)ResceduleNumber*100)/(EarlyNumber + LateNumber);
 }
 
 float EarlyPList::getEarlyPercent(int &LateNumber)
 {
-    return ((flaot)EarlyNumber*100)/(EarlyNumber + LateNumber);
+    return ((float)EarlyNumber*100)/(EarlyNumber + LateNumber);
 }
 
 int EarlyPList::GetEarlyNumber()
