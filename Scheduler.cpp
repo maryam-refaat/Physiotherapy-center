@@ -237,7 +237,7 @@ void Scheduler::AssignTreatments(int currentTime) {
     }
 }
 
-int Scheduler:: getLatency(Treatment* t)
+int Scheduler:: getLatency(Treatment* t) const
 {
     if(dynamic_cast<UltrasoundTreatment*>(t))
         {  
