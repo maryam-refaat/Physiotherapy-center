@@ -4,7 +4,7 @@
 
 class ElectroTreatment : public Treatment {
 public:
-    ElectroTreatment(TreatmentType t, int d) : Treatment(t,d) {}
+    ElectroTreatment(/*TreatmentType t,*/ int d) : Treatment(d) {}
 
     bool canAssign(Scheduler& scheduler) const;
     void moveToWait(Scheduler& scheduler, Patient* patient);
