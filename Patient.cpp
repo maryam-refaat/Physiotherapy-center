@@ -22,7 +22,10 @@ Patient::Patient(int id, PatientType patientType, int appointmentTime, int arriv
     updateStatus(0);
 }
 
-
+void Patient::setState(PatientStatus p)
+{
+    status = p;
+}
 
 void Patient::setPT(int newPT)
 {
