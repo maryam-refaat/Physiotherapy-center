@@ -2,6 +2,8 @@
 
 #include "Treatment.h"
 #include"Schedule.h"
+class Scheduler;
+
 class ElectroTreatment : public Treatment {
 public:
     ElectroTreatment(/*TreatmentType t,*/ int d) : Treatment(d) {}
