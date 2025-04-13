@@ -113,16 +113,6 @@ private:
         cout << list.getCount() << " " << name << " patients: ";
 
         list.print_list();
-
-        /*LinkedQueue<Patient*> temp(list);
-        Patient* p;
-        int count = 0;
-
-        while (temp.dequeue(p) && count< list.getCount())
-        {
-            cout << p->getPID() << " ";
-            count++;
-        }*/
         cout << "\n";
     }
 

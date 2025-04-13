@@ -5,6 +5,11 @@
 #include <ctime>   // For seeding rand()
 #include <cctype>
 #include"iostream"
+#include "ElectroTreatment.h"
+#include "Treatment.h"
+#include "UltrasoundTreatment.h"
+#include "ExerciseTreatment.h"
+
 using namespace std;
 
 Scheduler::Scheduler() {
@@ -210,7 +215,7 @@ void Scheduler::AssignTreatments(int currentTime) {
         ALLPatients.dequeue(TempPatient);
         PatientType patientType=TempPatient->getType();
         if(patientType== PatientType::RECOVERING)
-             TempPatient->optimizeTreatmentOrder(*this);
+             TempPatient->optimizeTreatmentOrder();
         
         Treatment* t=TempPatient->getCurrentTreatment();
             if(t->canAssign(*this))
@@ -249,7 +254,7 @@ int Scheduler:: getLatency(Treatment* t) const
         }
     else
         {  
-        return X_Waiting.calcTreatmentLatency();
+            return X_Waiting.calcTreatmentLatency();
         }
 }
 
@@ -316,3 +321,171 @@ void Scheduler::addToEWait(Patient* patient)
     patient->setState(PatientStatus::WAIT);
     E_Waiting.insertSorted(patient);
 }
+
+void Scheduler::ProcessTimeStep(int currentTime) {
+    HandleArrivals(currentTime);
+    AssignTreatments(currentTime);
+    UpdateInTreatment(currentTime);
+
+    // ----- NEW PART START -----
+    int X = rand() % 101;
+
+    if (X < 10) {
+        MoveFromEarlyToRandomWaiting();
+    } else if (X < 20) {
+        MoveFromLateToRandomWaiting();
+    } else if (X < 40) {
+        MoveFromRandomWaitingToInTreatment(2);
+    } else if (X < 50) {
+        MoveFromInTreatmentToRandomWaiting();
+    } else if (X < 60) {
+        MoveFromInTreatmentToFinish();
+    } else if (X < 70) {
+        CancelRandomFromWaiting();
+    } else if (X < 80) {
+        RescheduleFromEarly();
+    }
+    // ----- NEW PART END -----
+}
+
+void Scheduler::MoveFromEarlyToRandomWaiting() {
+    if (!EarlyPatients.isEmpty()) {
+        Patient* p;
+        int pri;
+        EarlyPatients.dequeue(p, pri);
+        RandomWaiting.enqueue(p);
+    }
+}
+
+void Scheduler::MoveFromLateToRandomWaiting() {
+    if (!LatePatients.isEmpty()) {
+        Patient* p;
+        int pri;
+        LatePatients.dequeue(p, pri);
+        RandomWaiting.enqueue(p);
+    }
+}
+
+void Scheduler::MoveFromRandomWaitingToInTreatment(int count, int currentTime) {
+    for (int i = 0; i < count && !RandomWaiting.isEmpty(); ++i) {
+        Patient* p;
+        RandomWaiting.dequeue(p);
+        Treatment* t = p->getCurrentTreatment();
+        if (t->canAssign(*this)) {
+            Resource* r;
+            if (dynamic_cast<UltrasoundTreatment*>(t)) {
+                U_Devices.dequeue(r);
+            } else if (dynamic_cast<ElectroTreatment*>(t)) {
+                E_Devices.dequeue(r);
+            } else {
+                X_Rooms.dequeue(r);
+            }
+            t->assign(r, t->getDuration());
+            p->setTreatmentStartTime(currentTime); // ← set start time
+            InTreatment.enqueue(p, -currentTime);   // Priority by time started
+        } else {
+            t->moveToWait(*this, p); // Send to appropriate waiting queue
+        }
+    }
+}
+
+void Scheduler::MoveFromInTreatmentToRandomWaiting() {
+    if (!InTreatment.isEmpty()) {
+        Patient* p;
+        int pri;
+        InTreatment.dequeue(p, pri);
+        RandomWaiting.enqueue(p);
+    }
+}
+
+void Scheduler::MoveFromInTreatmentToFinish() {
+    if (!InTreatment.isEmpty()) {
+        Patient* p;
+        int pri;
+        InTreatment.dequeue(p, pri);
+        MoveToFinished(p);
+    }
+}
+
+void Scheduler::CancelRandomFromWaiting() {
+    int listType = rand() % 3;  // 0 = E, 1 = U, 2 = X
+
+    // Select the queue
+    LinkedQueue<Patient*>* queue = nullptr;
+    if (listType == 0) queue = &E_Waiting;
+    else if (listType == 1) queue = &U_Waiting;
+    else queue = &X_Waiting;
+
+    if (queue && queue->getCount() > 0) {
+        int index = rand() % queue->getCount();
+
+        LinkedQueue<Patient*> temp;
+        Patient* removedPatient = nullptr;
+        Patient* p;
+
+        // Rebuild queue, skipping the one to cancel
+        for (int i = 0; i < queue->getCount(); ++i) {
+            queue->dequeue(p);
+            if (i == index) {
+                removedPatient = p;
+            } else {
+                temp.enqueue(p);
+            }
+        }
+
+        // Move remaining back to original queue
+        while (!temp.isEmpty()) {
+            temp.dequeue(p);
+            queue->enqueue(p);
+        }
+
+        // Cancel selected patient
+        if (removedPatient) {
+            MoveToFinished(removedPatient);  // Treat as canceled
+        }
+    }
+}
+
+
+// void Scheduler::RescheduleFromEarly() {
+//     Patient* rescheduled = EarlyPatients.reschedule();
+//     if (rescheduled) {
+//         // Assume the patient is now ready to be handled like a newly arrived one
+//         if (rescheduled->getVT() == rescheduled->getPT()) {
+//             rescheduled->updateStatus(currentTime);  // update status to WAIT
+//             switch (rescheduled->getCurrentTreatmentType()) {
+//                 case TreatmentType::ELECTRO: E_Waiting.insertSorted(rescheduled); break;
+//                 case TreatmentType::ULTRASOUND: U_Waiting.insertSorted(rescheduled); break;
+//                 case TreatmentType::EXERCISE: X_Waiting.insertSorted(rescheduled); break;
+//             }
+//         }
+//     }
+// }
+void Scheduler::RescheduleFromEarly() {
+    Patient* rescheduled = EarlyPatients.reschedule();
+    if (!rescheduled) return;
+
+    // Check if the patient is now exactly on time
+    if (rescheduled->getVT() == rescheduled->getPT()) {
+        // Set the status directly instead of using currentTime
+        rescheduled->setState(PatientStatus::WAIT);  // Manually mark as waiting
+
+        // Insert into the appropriate waiting queue based on treatment type
+        switch (rescheduled->getCurrentTreatmentType()) {
+            case TreatmentType::ELECTRO:
+                E_Waiting.insertSorted(rescheduled);
+                break;
+            case TreatmentType::ULTRASOUND:
+                U_Waiting.insertSorted(rescheduled);
+                break;
+            case TreatmentType::EXERCISE:
+                X_Waiting.insertSorted(rescheduled);
+                break;
+        }
+    } else {
+        // They are still early or late, so you might keep them in early list or handle differently
+        EarlyPatients.enqueue(rescheduled,-rescheduled->getPT());  // Optional: keep in early queue
+    }
+}
+
+

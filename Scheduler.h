@@ -22,6 +22,8 @@ private:
     EU_WaitList E_Waiting;
     X_WaitList X_Waiting;
 
+    LinkedQueue<Patient*> RandomWaiting; 
+
     // Treatment Resources
     LinkedQueue<Resource*> E_Devices;
     LinkedQueue<Resource*> U_Devices;
@@ -44,6 +46,14 @@ public:
     // Simulation core
     void RunSimulation();
     void ProcessTimeStep(int currentTime);
+    void MoveFromEarlyToRandomWaiting();
+    void MoveFromLateToRandomWaiting();
+    void MoveFromRandomWaitingToInTreatment(int count, int currentTime);
+    void MoveFromRandomWaitingToInTreatment(int count);
+    void MoveFromInTreatmentToRandomWaiting();
+    void MoveFromInTreatmentToFinish();
+    void CancelRandomFromWaiting();
+    void RescheduleFromEarly();
     void HandleArrivals(int currentTime);
     void AssignTreatments(int currentTime);
     void UpdateInTreatment(int currentTime);

@@ -54,6 +54,10 @@ protected:
         void startTreatment(int currentTime);
         bool completeTreatment();
         void moveToNextTreatment();
+
+
+        void setTreatmentStartTime(int time);
+
     
        // Special functions for recovering patients
         void optimizeTreatmentOrder(Scheduler& scheduler);

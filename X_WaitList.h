@@ -3,16 +3,10 @@
 
 class X_WaitList : public EU_WaitList 
 {
-    int CancelNumber;
     int Pcancel; // Cancellation probability (0-100)
 public:
-    X_WaitList(int cancelProb) : Pcancel(cancelProb),CancelNumber(0) {}
-
-    //Patient* cancel();
-
-      bool cancel(Patient* &pcancelled);
-
-
-      float getCancellationPercent(int& EarlyNumber, int& LateNumber);
+    X_WaitList():Pcancel(0) {};
+    X_WaitList(int cancelProb) : Pcancel(cancelProb) {}
+    Patient* cancel();
 };
 

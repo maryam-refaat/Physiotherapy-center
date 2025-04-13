@@ -2,23 +2,15 @@
 
 #include "PriQueue.h"
 #include "Patient.h"
-class Patient;
+
 class EarlyPList : public PriQueue<Patient*> 
 {
     int Presc; // Rescheduling probability (0-100)
-    int EarlyNumber;
-    int ResceduleNumber;
 public:
-    EarlyPList(int rescheduleProb) : Presc(rescheduleProb),EarlyNumber(0),ResceduleNumber(0) {}
+    EarlyPList() : Presc(0) {}
+    EarlyPList(int rescheduleProb) : Presc(rescheduleProb) {}
 
     Patient* reschedule();
-
-    void enqueue(Patient* &data, int priority);
-    
-    float getReschedulePercent(int &LateNumber);
-    float getEarlyPercent(int &LateNumber);
-
-    int GetEarlyNumber();
 };
 
 

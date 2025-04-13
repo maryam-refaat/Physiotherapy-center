@@ -22,35 +22,27 @@ Patient::Patient(int id, PatientType patientType, int appointmentTime, int arriv
     updateStatus(0);
 }
 
-void Patient::setState(PatientStatus p)
-{
-    status = p;
-}
-
-void Patient::setPT(int newPT)
-{
-    PT = newPT;
+void Patient::setTreatmentStartTime(int time) {
+    treatmentStartTime = time;
 }
 
 
-void Patient::optimizeTreatmentOrder(Scheduler& scheduler) 
+
+void Patient::optimizeTreatmentOrder() 
 {
     if (requiredTreatments.getCount() <= 1) return;
 
     // Find treatment with minimum duration (for recovering patients)
     LinkedQueue<Treatment*> tempQueue;
     Treatment* minTreatment = nullptr;
-    // int minDuration = INT_MAX;
-    int minLatency = INT_MAX;
-    Treatment* t=NULL;
+    int minDuration = INT_MAX;
+    Treatment* t;
 
     while (requiredTreatments.dequeue(t)) 
     {
-        // if (t->getDuration() < minDuration) 
-        int latency=scheduler.getLatency(t);
-        if (latency < minLatency) 
+        if (t->getDuration() < minDuration) 
         {
-            minLatency = latency;
+            minDuration = t->getDuration();
             if (minTreatment) tempQueue.enqueue(minTreatment);
             minTreatment = t;
         }
@@ -156,40 +148,3 @@ void Patient::calculateLatePenalty()
         latePenalty = (VT - PT) / 2;
     }
 }
-
-
-
-ostream& operator<<(ostream& os, const Patient& patient)
-{
-    os << "P" << patient.getPID() << "_" << patient.getVT() << " ,";
-    return os;
-}
-
-// Treatment* Patient:: GetTreatment_With_LeastLatency() const
-// {
-//     int leastLatency=INT_MAX;
-//     Treatment* t=NULL;
-//     int ListSize=getTreatmentListSize();
-
-//     while(requiredTreatments.dequeue(t) && ListSize--)
-//     {
-//         if(dynamic_cast<UltrasoundTreatment*>(t))
-//             {  
-                
-//             }
-//         else if(dynamic_cast<ElectroTreatment*>(t))
-//             {  
-                
-//             }
-//         else
-//             {  
-                
-//             }
-//     }
-
-// }
-
-// bool patient::FinishedTreatments()
-// {
-//     return requiredTreatments.isEmpty();
-// }
