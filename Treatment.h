@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Resource.h"
-#include "Patient.h"
 #include"Scheduler.h"
 
 class Treatment {

@@ -5,8 +5,8 @@
 #include "EarlyPList.h"
 #include "EU_WaitList.h"
 #include "X_WaitList.h"
-#include "patient.h"
-#include "Resource.h"
+// #include "patient.h"
+// #include "Resource.h"
 
 using namespace std;
 
