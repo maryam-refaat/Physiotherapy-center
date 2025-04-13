@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Treatment.h"
+#include"Schedule.h"
+class Scheduler;
 
 class ElectroTreatment : public Treatment {
 public:

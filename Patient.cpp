@@ -15,10 +15,10 @@ Patient::Patient(int id, PatientType patientType, int appointmentTime, int arriv
         requiredTreatments.enqueue(treatment);
     }
 
-    if (type == PatientType::RECOVERING) 
+    /*if (type == PatientType::RECOVERING) 
     {
         optimizeTreatmentOrder();
-    }
+    }*/
     updateStatus(0);
 }
 
@@ -75,7 +75,15 @@ Treatment* Patient::getCurrentTreatment() const
 TreatmentType Patient::getCurrentTreatmentType() const 
 {
     Treatment* t = getCurrentTreatment();
-    if (t) return t->getTreatmentType();
+    if (t)
+    {
+        if (dynamic_cast<ElectroTreatment*>(t))
+            return TreatmentType::ELECTRO;
+        else if (dynamic_cast<ExerciseTreatment*>(t))
+            return TreatmentType::EXERCISE;
+        else if(dynamic_cast<UltrasoundTreatment*>(t))
+            return TreatmentType::ULTRASOUND;
+    }
     return TreatmentType::EXERCISE; // Default
 }
 
@@ -89,7 +97,8 @@ bool Patient::isLastTreatmentXTherapy() const
     if (requiredTreatments.getCount() != 1) return false;
     Treatment* t;
     requiredTreatments.peek(t);
-    return t->getTreatmentType() == TreatmentType::EXERCISE;
+   // return t->getTreatmentType() == TreatmentType::EXERCISE;
+    return dynamic_cast<ExerciseTreatment*>(t);
 }
 
 void Patient::startTreatment(int currentTime) 
