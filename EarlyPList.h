@@ -9,7 +9,7 @@ class EarlyPList : public PriQueue<Patient*>
     int EarlyNumber;
     int ResceduleNumber;
 public:
-    EarlyPList(int rescheduleProb) : Presc(rescheduleProb),EarlyNumber(0),ResceduleNumber(0) {}
+    EarlyPList(int rescheduleProb=0) : Presc(rescheduleProb),EarlyNumber(0),ResceduleNumber(0) {}
 
     Patient* reschedule();
 
